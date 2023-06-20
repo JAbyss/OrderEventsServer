@@ -1,0 +1,20 @@
+server:
+  port:
+    8899
+app:
+  dbone:
+    datasource:
+      url: jdbc:postgresql://postgres/coffee
+      username: admin
+      password: admin
+      driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+#spring:
+#  artemis:
+#    host: artemis
+#    port: 61616
+#    user: admin
+#    password: admin

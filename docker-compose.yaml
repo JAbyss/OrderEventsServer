@@ -1,0 +1,21 @@
+version: "3"
+
+volumes:
+  postgresdata:
+services:
+  orderevents:
+    image: orderevents:latest
+    ports:
+      - "8899:8899"
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:latest
+    ports:
+      - "1221:5432"
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=coffee
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
