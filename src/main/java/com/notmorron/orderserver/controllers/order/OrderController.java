@@ -3,7 +3,7 @@ package com.notmorron.orderserver.controllers.order;
 import com.notmorron.orderserver.controllers.order.model.Order;
 import com.notmorron.orderserver.databases.postgresql.domain.OrderEntity;
 import com.notmorron.orderserver.controllers.order.dto.OrderEventDto;
-import com.notmorron.orderserver.controllers.order.service.OrderServiceImpl;
+import com.notmorron.orderserver.controllers.order.service.publisher.OrderServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,7 +45,7 @@ public class OrderController {
      */
     @PostMapping("/events")
     public ResponseEntity<String> publishEvent(@RequestBody @Valid OrderEventDto eventDto) {
-        orderService.publishEvent(eventDto.toOrderEvent());
+        orderService.publishEvent(eventDto);
         return ResponseEntity.ok("Event published successfully");
     }
 

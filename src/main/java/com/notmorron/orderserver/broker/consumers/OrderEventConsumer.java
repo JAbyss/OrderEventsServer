@@ -2,7 +2,7 @@
 //
 //import com.fasterxml.jackson.databind.ObjectMapper;
 //import com.notmorron.orderserver.controllers.order.dto.OrderEventDto;
-//import com.notmorron.orderserver.controllers.order.service.OrderServiceImpl;
+//import com.notmorron.orderserver.controllers.order.service.publisher.OrderServiceImpl;
 //import org.springframework.jms.annotation.JmsListener;
 //import org.springframework.stereotype.Component;
 //

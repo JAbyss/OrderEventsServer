@@ -1,5 +1,6 @@
 package com.notmorron.orderserver.databases.postgresql.domain;
 
+import com.notmorron.orderserver.controllers.order.dto.OrderEventDto;
 import com.notmorron.orderserver.enums.EventType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,10 +37,22 @@ public class OrderEntity {
     @Column(name = "product_cost")
     private BigDecimal productCost;
 
+    private Long timestamp;
+
+    @Transient
+    private EventType lastEvent;
+
     @OneToMany(mappedBy = "orderId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<OrderEvent> events;
 
-    public OrderEvent toRegistrationOrderEvent(){
-        return new OrderEvent(null, id, EventType.ORDER_REGISTERED, employeeId, null, System.currentTimeMillis());
+    public OrderEventDto toRegistrationOrderEvent(){
+        return new OrderEventDto(id, employeeId, EventType.ORDER_REGISTERED, null);
+    }
+
+    public EventType getLastEvent() {
+        if (events != null && !events.isEmpty()) {
+            return events.get(events.size() - 1).getEventType();
+        }
+        return null;
     }
 }

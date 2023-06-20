@@ -70,7 +70,7 @@ public class PostgreSQLContainerTest {
     }
 
     private final Order order = new Order(
-            1L, 1L, 1L, 1687196330L, 1L, BigDecimal.valueOf(10.20)
+            1L, 1L, 1L, 1687196330L, 1L, BigDecimal.valueOf(10.20), System.currentTimeMillis()
     );
 
     private final OrderEventDto orderEventDtoInProgress = new OrderEventDto(order.getId(), order.getEmployeeId(), EventType.ORDER_IN_PROGRESS, null);
@@ -128,7 +128,7 @@ public class PostgreSQLContainerTest {
     public void testCancelEvent() {
 
         Order orderForCancelTest = new Order(
-                2L, 1L, 1L, 1687196330L, 1L, BigDecimal.valueOf(10.20)
+                2L, 1L, 1L, 1687196330L, 1L, BigDecimal.valueOf(10.20), System.currentTimeMillis()
         );
         ResponseEntity<String> response = orderController.addOrder(orderForCancelTest);
         assertTrue(response.getStatusCode().is2xxSuccessful());

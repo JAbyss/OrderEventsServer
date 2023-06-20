@@ -1,25 +1,27 @@
-package com.notmorron.orderserver.controllers.order.service;
+package com.notmorron.orderserver.controllers.order.service.publisher;
 
+import com.notmorron.orderserver.controllers.order.dto.OrderEventDto;
 import com.notmorron.orderserver.controllers.order.exceptionhandler.exceptions.*;
 import com.notmorron.orderserver.controllers.order.model.Order;
 import com.notmorron.orderserver.databases.postgresql.domain.OrderEntity;
 import com.notmorron.orderserver.databases.postgresql.domain.OrderEvent;
-import com.notmorron.orderserver.databases.postgresql.repositories.OrderEventRepository;
 import com.notmorron.orderserver.databases.postgresql.repositories.OrderRepository;
 import com.notmorron.orderserver.enums.EventType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
-public class OrderServiceImpl implements OrderService, OrderEventActions {
+public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
-    private final OrderEventRepository orderEventRepository;
 
-    public OrderServiceImpl(OrderRepository orderRepository, OrderEventRepository orderEventRepository) {
+    @Autowired
+    private ApplicationEventPublisher publisher;
+
+    public OrderServiceImpl(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
-        this.orderEventRepository = orderEventRepository;
     }
 
     /**
@@ -39,17 +41,19 @@ public class OrderServiceImpl implements OrderService, OrderEventActions {
     }
 
     /**
-     * Публикует событие для заказа.
-     * Если заказ не существует, генерируется исключение OrderNotFoundException.
-     * Если событие не допустимо для текущего состояния заказа, генерируется исключение.
-     * В зависимости от типа события вызывается соответствующий метод для обработки события.
-     * Событие сохраняется в репозитории orderEventRepository.
+     * Публикует событие заказа.
+     * <p>
+     * Этот метод принимает объект OrderEventDto, извлекает соответствующий заказ из репозитория заказов
+     * на основе идентификатора заказа и проверяет, разрешено ли событие для данного заказа.
+     * Если заказ не найден, выбрасывается исключение OrderNotFoundException.
+     * Если событие разрешено, событие передается публикатору (ApplicationEventPublisher)
+     * для дальнейшей обработки подписчиками событий.
      *
-     * @param event событие заказа
+     * @param event объект OrderEventDto для публикации
+     * @throws OrderNotFoundException если заказ не найден
      */
     @Override
-    @Transactional
-    public void publishEvent(OrderEvent event) {
+    public void publishEvent(OrderEventDto event) {
 
         Long orderId = event.getOrderId();
         OrderEntity orderEntity = orderRepository.findById(orderId)
@@ -57,15 +61,7 @@ public class OrderServiceImpl implements OrderService, OrderEventActions {
 
         isEventAllowed(orderEntity, event);
 
-        switch (event.getEventType()) {
-            case ORDER_REGISTERED -> registrationEvent(event);
-            case ORDER_IN_PROGRESS -> inProgressEvent(event);
-            case ORDER_READY -> readyEvent(event);
-            case ORDER_DELIVERED -> deliveredEvent(event);
-            case ORDER_CANCELLED -> canceledEvent(event);
-        }
-
-        orderEventRepository.save(event);
+        publisher.publishEvent(event);
     }
 
     /**
@@ -86,9 +82,9 @@ public class OrderServiceImpl implements OrderService, OrderEventActions {
      * Генерирует исключение, если событие не допустимо.
      *
      * @param orderEntity заказ
-     * @param event событие заказа
+     * @param event       событие заказа
      */
-    private void isEventAllowed(OrderEntity orderEntity, OrderEvent event) {
+    private void isEventAllowed(OrderEntity orderEntity, OrderEventDto event) {
 
         EventType eventType = event.getEventType();
 

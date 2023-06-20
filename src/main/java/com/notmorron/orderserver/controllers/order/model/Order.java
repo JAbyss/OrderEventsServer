@@ -24,8 +24,9 @@ public class Order {
     private Long productId;
     @NotNull
     private BigDecimal productCost;
-
+    @NotNull
+    private Long timestamp;
     public OrderEntity toOrderEntity() {
-        return new OrderEntity(null, customerId, employeeId, expectedDeliveryTime, productId, productCost, null);
+        return new OrderEntity(null, customerId, employeeId, expectedDeliveryTime, productId, productCost, timestamp, null, null);
     }
 }

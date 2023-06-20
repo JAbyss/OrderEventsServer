@@ -1,10 +1,13 @@
 package com.notmorron.orderserver.controllers.order.dto;
 
+import com.notmorron.orderserver.databases.postgresql.domain.OrderEntity;
 import com.notmorron.orderserver.databases.postgresql.domain.OrderEvent;
 import com.notmorron.orderserver.enums.EventType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.aspectj.weaver.ast.Or;
+import org.springframework.context.ApplicationEvent;
 
 import javax.validation.constraints.NotNull;
 
