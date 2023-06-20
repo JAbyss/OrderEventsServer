@@ -1,0 +1,97 @@
+{
+	"info": {
+		"_postman_id": "6afd848d-1bb9-469b-8bd9-f188e7615941",
+		"name": "OrderEventsServer",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19982184"
+	},
+	"item": [
+		{
+			"name": "Добавить заказ",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 4,\n    \"customerId\": 3,\n    \"employeeId\": 1,\n    \"expectedDeliveryTime\": 1687196330,\n    \"productId\": 55,\n    \"productCost\": 1234.50\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://109.195.147.44:8899/orders/add",
+					"protocol": "http",
+					"host": [
+						"109",
+						"195",
+						"147",
+						"44"
+					],
+					"port": "8899",
+					"path": [
+						"orders",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Передать событие",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"orderId\": \"1\",\n    \"eventType\": \"ORDER_CANCELLED\",\n    \"employeeId\": \"4\",\n    \"comment\": \"Захотел\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://109.195.147.44:8899/orders/events",
+					"protocol": "http",
+					"host": [
+						"109",
+						"195",
+						"147",
+						"44"
+					],
+					"port": "8899",
+					"path": [
+						"orders",
+						"events"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Получить заказ и его события",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://109.195.147.44:8899/orders/1",
+					"protocol": "http",
+					"host": [
+						"109",
+						"195",
+						"147",
+						"44"
+					],
+					"port": "8899",
+					"path": [
+						"orders",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
