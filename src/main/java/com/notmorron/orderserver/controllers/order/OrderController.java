@@ -7,6 +7,8 @@ import com.notmorron.orderserver.controllers.order.service.OrderServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
@@ -27,7 +29,7 @@ public class OrderController {
      * @return ResponseEntity с сообщением об успешном создании заказа
      */
     @PostMapping("/add")
-    public ResponseEntity<String> addOrder(@RequestBody Order order) {
+    public ResponseEntity<String> addOrder(@RequestBody @Valid Order order) {
         orderService.createOrder(order);
         return ResponseEntity.ok("Order created");
     }
@@ -42,7 +44,7 @@ public class OrderController {
      * @return ResponseEntity с сообщением об успешной публикации события
      */
     @PostMapping("/events")
-    public ResponseEntity<String> publishEvent(@RequestBody OrderEventDto eventDto) {
+    public ResponseEntity<String> publishEvent(@RequestBody @Valid OrderEventDto eventDto) {
         orderService.publishEvent(eventDto.toOrderEvent());
         return ResponseEntity.ok("Event published successfully");
     }

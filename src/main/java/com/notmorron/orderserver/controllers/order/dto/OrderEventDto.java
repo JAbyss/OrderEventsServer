@@ -6,12 +6,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderEventDto {
+    @NotNull
     private Long orderId;
+    @NotNull
     private Long employeeId;
+    @NotNull
     private EventType eventType;
     private String comment = null;
 
